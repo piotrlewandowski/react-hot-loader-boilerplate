@@ -7,6 +7,7 @@ import sass from 'gulp-sass';
 import minifyCss from 'gulp-minify-css';
 import autoprefixer from 'gulp-autoprefixer';
 import sourcemaps from 'gulp-sourcemaps';
+import eslint from 'gulp-eslint';
 import del from 'del';
 import path from 'path';
 import runSequence from 'run-sequence';
@@ -74,6 +75,13 @@ gulp.task('sass', () => {
     .pipe(gulpif(!process.env.NODE_ENV, browserSync.reload({ stream: true })));
 });
 
+gulp.task('lint', () => {
+  return gulp.src('src/js/**/*.js*(x)')
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
+
 gulp.task('browser-sync', ['html', 'sass'], () => {
   const bundler = webpack(_.assign({}, webpackConfig.common, webpackConfig.dev));
   browserSync.init({
@@ -105,4 +113,4 @@ gulp.task('serve', done => {
   runSequence('clean', 'browser-sync', 'watch', done);
 });
 
-gulp.task('default', ['serve']);
+gulp.task('default', ['lint']);

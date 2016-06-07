@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 class SampleComponent extends Component {
   constructor(props) {
@@ -24,10 +24,6 @@ class SampleComponent extends Component {
     );
   }
 }
-
-SampleComponent.propTypes = {
-  initialCount: React.PropTypes.number
-};
 
 SampleComponent.defaultProps = {
   initialCount: 0
