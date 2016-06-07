@@ -1,0 +1,22 @@
+.component {
+  .heading {
+    opacity: 0;
+    animation: heading .5s forwards;
+  }
+}
+
+@keyframes heading {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  65% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
