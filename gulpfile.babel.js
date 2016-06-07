@@ -1,6 +1,12 @@
 import PATHS, { webpackConfig } from './config';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
+import gnotify from 'gulp-notify';
+import gulpif from 'gulp-if';
+import sass from 'gulp-sass';
+import minifyCss from 'gulp-minify-css';
+import autoprefixer from 'gulp-autoprefixer';
+import sourcemaps from 'gulp-sourcemaps';
 import del from 'del';
 import path from 'path';
 import runSequence from 'run-sequence';
@@ -23,7 +29,7 @@ browserSync.use({
 gulp.task('clean', () => del.sync(PATHS.build));
 
 gulp.task('build', ['clean'], done => {
-  runSequence('html', 'webpack:build', done);
+  runSequence('html', 'sass', 'webpack:build', done);
 });
 
 gulp.task('webpack:build', done => {
@@ -43,7 +49,32 @@ gulp.task('html', () => {
     .pipe(gulp.dest(PATHS.build));
 });
 
-gulp.task('browser-sync', ['html'], () => {
+gulp.task('sass', () => {
+  return gulp.src(path.join(PATHS.source, 'sass/**/*.scss'))
+    .pipe(gulpif(!process.env.NODE_ENV, sourcemaps.init()))
+    .pipe(sass({
+        outputStyle: 'expanded',
+        includePaths: ['scss']
+      })
+        .on('error', sass.logError)
+    )
+    .on('error', gnotify.onError({
+      title: 'Sass Error',
+      message: 'Error in file <%= error.message %>'
+    }))
+    .pipe(autoprefixer({
+      browsers: ['> 1%', 'IE >= 9']
+    }))
+    .pipe(gulpif(!process.env.NODE_ENV, sourcemaps.write()))
+    .pipe(gulpif(process.env.NODE_ENV, minifyCss({
+      // CSS animations on IE/Edge seem to need units on zero.
+      compatibility: '-properties.zeroUnits'
+    })))
+    .pipe(gulp.dest(PATHS.build))
+    .pipe(gulpif(!process.env.NODE_ENV, browserSync.reload({ stream: true })));
+});
+
+gulp.task('browser-sync', ['html', 'sass'], () => {
   const bundler = webpack(_.assign({}, webpackConfig.common, webpackConfig.dev));
   browserSync.init({
     server: {
@@ -66,8 +97,12 @@ gulp.task('browser-sync', ['html'], () => {
   });
 });
 
+gulp.task('watch', () => {
+  gulp.watch(path.join(PATHS.source, 'sass/**/*.scss'), ['sass']);
+});
+
 gulp.task('serve', done => {
-  runSequence('clean', 'browser-sync', done);
+  runSequence('clean', 'browser-sync', 'watch', done);
 });
 
 gulp.task('default', ['serve']);

@@ -13,8 +13,8 @@ class SampleComponent extends Component {
 
   render() {
     return (
-      <div>
-        <h2>Sample Component</h2>
+      <div className="component">
+        <h2 className="heading">Sample Component</h2>
 
         <div>
           <button onClick={this.tick}>Click</button>
