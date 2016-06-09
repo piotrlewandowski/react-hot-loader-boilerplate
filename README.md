@@ -2,7 +2,7 @@
 
 Boilerplate for kick starting a React project with ES6 (Babel) with Hot Loader using Webpack.
 ## What does it include?
-* [Gulpfile](http://gulpjs.com/)
+* [Gulp](http://gulpjs.com/)
 * [Browsersync](https://github.com/browsersync/browser-sync)
 * [React](https://github.com/facebook/react)
 * [React Hot Loader](https://github.com/gaearon/react-hot-loader)
