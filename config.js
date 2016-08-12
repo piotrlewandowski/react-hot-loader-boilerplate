@@ -61,45 +61,5 @@ const webpackConfig = {
   }
 };
 
-const webpackConfig2 = {
-  debug: true,
-  context: PATHS.source,
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
-  devtool: 'inline-source-map',
-  entry: [
-    'webpack-hot-middleware/client?http://localhost:5000',
-    'webpack/hot/dev-server',
-    './js/main.js'
-  ],
-  output: {
-    path: PATHS.build,
-    publicPath: '/',
-    filename: '[name].js'
-  },
-  devServer: {
-    contentBase: '.',
-    inline: true,
-    watch: true,
-    hot: true
-  },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  ],
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['react-hot', 'babel'],
-        exclude: /public|node_modules/
-      }
-    ]
-  }
-};
-
 export default PATHS;
 export { webpackConfig };
-export { webpackConfig2 };
